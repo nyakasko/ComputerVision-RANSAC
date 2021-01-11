@@ -43,10 +43,13 @@ void FitLineRANSAC(
 		const Point2d& p1 = points_[sample[0]]; // First point selected
 		const Point2d& p2 = points_[sample[1]]; // Second point select		
 		Point2d v = p2 - p1; // Direction of the line
-		v = v / cv::norm(v);
-		Point2d n;
+		v = v / cv::norm(v); // Division by the length of the vector to make it unit length
+		Point2d n; // Normal of the line (perpendicular to the line)
+		// Rotate v by 90° to get n
 		n.x = -v.y;
 		n.y = v.x;
+		// distance(line, point) = | a * x + b * y + c | / sqrt(a * a + b * b)
+		// if ||n||_2 = 1 (unit length) then sqrt(a * a + b * b) = 1 and I don't have to do the division that is in the previous line
 		long double a = n.x;
 		long double b = n.y;
 		long double c = -(a * p1.x + b * p1.y);
